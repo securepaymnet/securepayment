@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #34495e;
+            --secondary-color: #3498db;
+            --background-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --border-color: #bdc3c7;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .payment-portal {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-image {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            height: 200px;
+            border-radius: 12px;
+            position: relative;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(45deg, #bdbdbd, #f0f0f0);
+            border-radius: 5px;
+        }
+
+        .card-number, .card-holder, .card-expiry {
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .card-types {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .card-type img {
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+
+        form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 400;
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        .expiry-cvv-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        .expiry-container, .cvv-container {
+            flex: 1;
+        }
+
+        #alert {
+            display: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 400;
+            font-size: 0.95rem;
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        @media (max-width: 480px) {
+            .payment-portal {
+                border-radius: 0;
+                box-shadow: none;
+                padding: 2rem;
+            }
+
+            .card-image {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-portal">
+        <div id="alert"></div>
+        <div class="card-image">
+            <div class="card-content">
+                <div class="card-chip"></div>
+                <div class="card-number" id="cardNumberDisplay">**** **** **** ****</div>
+                <div class="card-holder" id="cardHolderDisplay">CARD HOLDER</div>
+                <div class="card-expiry" id="cardExpiryDisplay">MM/YY</div>
+                <div class="card-types">
+                    <div class="card-type">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
+                    </div>
+                    <div class="card-type">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
+                    </div>
+                    <div class="card-type">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="American Express">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form id="paymentForm">
+            <div>
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" required maxlength="19" placeholder="1234 5678 9012 3456">
+                <span id="cardNumberError" class="error"></span>
+            </div>
+
+            <div>
+                <label for="cardHolder">Cardholder Name</label>
+                <input type="text" id="cardHolder" required placeholder="John Doe">
+                <span id="cardHolderError" class="error"></span>
+            </div>
+
+            <div class="expiry-cvv-container">
+                <div class="expiry-container">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="text" id="expiryDate" required placeholder="MM/YY" maxlength="5">
+                    <span id="expiryError" class="error"></span>
+                </div>
+
+                <div class="cvv-container">
+                    <label for="cvv">CVV</label>
+                    <input type="password" id="cvv" required maxlength="4" placeholder="***">
+                    <span id="cvvError" class="error"></span>
+                </div>
+            </div>
+
+            <button type="submit">Complete Purchase</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
